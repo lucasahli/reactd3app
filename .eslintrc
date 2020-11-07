@@ -1,0 +1,10 @@
+{
+   "extends": ["prettier"],
+   "plugins": ["prettier"],
+   "rules": {
+      "prettier/prettier": "error",
+      "no-unused-vars": "off",
+      "no-console": "off"
+   },
+   "parser": "babel-eslint"
+}
