@@ -1,5 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
+import csvData from "./data/h1bs.csv";
 
 class App extends React.Component {
   constructor(props) {
@@ -41,39 +42,50 @@ class App extends React.Component {
       .attr("fill", "teal");
   }
 
-  row(data) {
+  reformatRow(row) {
+    const dateParser = d3.timeParse("%m/%d/%Y");
     const dateFormat = d3.timeFormat("%m/%d/%Y");
-    console.log("data", data);
-    if (!data["base salary"]) {
+
+    if (!row["base salary"]) {
+      console.log("base salary not found");
       return null;
     }
     return {
-      employer: d.employer,
-      submit_date: dateFormat.parse(d["submit date"]),
-      start_date: dateFormat.parse(d["start date"]),
-      case_status: d["case status"],
-      job_title: d["job title"],
-      base_salary: Number(d["base salary"]),
-      salary_to: d["salary to"] ? Number(d["salary to"]) : null,
-      city: d.city,
-      state: d.state,
+      employer: row.employer,
+      submit_date: dateParser(row["submit date"]),
+      start_date: dateParser(row["start date"]),
+      case_status: row["case status"],
+      job_title: row["job title"],
+      base_salary: Number(row["base salary"]),
+      salary_to: row["salary to"] ? Number(row["salary to"]) : null,
+      city: row.city,
+      state: row.state,
     };
   }
 
-  get(error, rows) {
-    console.log(error);
-    console.log(rows[3]);
-    if (error) {
-      console.error(error);
-      console.error(error.stack);
+  row(data) {
+    console.log("data", data);
+    data.forEach(this.reformatRow);
+    return data;
+  }
+
+  get(rows) {
+    //console.log(error);
+    console.log("Row 3: ", rows[3]);
+    if (!rows) {
+      // console.error(error);
+      // console.error(error.stack);
     } else {
+      console.log("Set State: rawData");
       this.setState({ rawData: rows });
     }
   }
 
   loadRawData() {
-    console.log("URL", this.props.url);
-    d3.csv(this.props.url).then(this.row.bind(this)).then(this.get.bind(this));
+    // d3.csv("public/data/h1bs.csv", function (data) {
+    //   console.log(data);
+    // });
+    d3.csv(csvData).then(this.row.bind(this)).then(this.get.bind(this));
   }
 
   render() {

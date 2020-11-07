@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App url="/Users/luca/Develop/ReactAndD3/reactd3app/public/data/h1bs.csv" />
+    <App url="public/data" />
   </React.StrictMode>,
   document.getElementById("root")
 );
